@@ -13,7 +13,8 @@ def generate_random_data(size_in_bytes):
     return ''.join(chr(random.randint(65, 90)) for _ in range(size_in_bytes))
 
 def generate_file(file_size, file_prefix, file_ext):
-    uid = uuid4()
+    # we only need the 6 least significant digits from the hex of our uuid
+    uid = f"{uuid4().hex[-6:]}"
     filename = f"{file_prefix}{uid}.{file_ext}"
 
     with open(filename, "w") as f:
