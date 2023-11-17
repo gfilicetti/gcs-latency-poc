@@ -2,6 +2,7 @@
 .vscode
 *.ts
 *.csv
+keys.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
