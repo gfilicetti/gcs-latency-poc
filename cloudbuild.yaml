@@ -1,8 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-f', 'Dockerfile', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/cdn-prewarm-pubsub:latest', '.' ]
+  args: [ 'build', '-f', 'Dockerfile', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/gcs-latency-tester:latest', '.' ]
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'push', 'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/cdn-prewarm-pubsub:latest' ]
+  args: [ 'push', 'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/gcs-latency-tester:latest' ]
 # This step will redeploy the Cloud Run on every commit, we don't want that right now
 # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
 #   entrypoint: gcloud
@@ -17,4 +17,4 @@ steps:
 #           'managed', 
 #           '--allow-unauthenticated' ]
 images:
-- 'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/cdn-prewarm-pubsub:latest'
+- 'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/gcs-latency-tester:latest'
