@@ -8,9 +8,9 @@ steps:
 #   entrypoint: gcloud
 #   args: [ 'run', 
 #           'deploy', 
-#           'cdn-prewarm-pubsub', 
+#           'gcs-latency-tester', 
 #           '--image', 
-#           'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/cdn-prewarm-pubsub:latest', 
+#           'us-central1-docker.pkg.dev/$PROJECT_ID/registry-docker/gcs-latency-tester:latest', 
 #           '--region', 
 #           'us-central1',
 #           '--platform', 
