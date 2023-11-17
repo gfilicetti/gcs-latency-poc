@@ -1,9 +1,12 @@
+import sys
 import random
 import time
 import subprocess
+import csv
 from uuid import uuid4
 from argparse import ArgumentParser
 from google.cloud import storage
+# from tqdm import tqdm
 
 # Constants
 BUCKET = "gcs-latency-1"
@@ -22,49 +25,63 @@ def generate_file(file_size, file_prefix, file_ext):
 
     return filename
 
-def gcs_write_with_gsutil(filename):
+def gsutil_file_to_gcs(filename):
     cmd = ["gsutil", "--quiet", "cp", filename, f"gs://{BUCKET}/{DIR}"]
-
     subprocess.check_call(cmd)
 
-def gcs_write_with_sdk(filename):
+def write_file_to_gcs(filename):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
-    blob = bucket.blob(f"{DIR}/{filename}")
+    blob = bucket.blob(f"{DIR}/sdk-{filename}")
     blob.upload_from_filename(filename)
 
-def gcs_write_direct():
-    return
+def write_direct_to_gcs(filename, file_size):
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET)
+    blob = bucket.blob(f"{DIR}/direct-{filename}")
+
+    with blob.open('w') as f:
+        f.write(generate_random_data(file_size))
 
 def main(args):
+
+    # print("gino")
+    # for count in range(10):
+    #     print(f"{count}", end="\r")
+
+    # for i in tqdm(range(100)):
+    #     time.sleep(1)
+
+    # exit()
+
     file_size = args.file_size
     file_prefix = args.file_prefix
     file_ext = args.file_ext
+    iterations = args.iterations
+    
+    writer = csv.writer(sys.stdout)
+    writer.writerow(["iteration", "filename", "size_bytes", "time_file_to_gcs", "time_direct_to_gcs"])
 
-    start = time.perf_counter()
-    filename = generate_file(file_size, file_prefix, file_ext)
-    end = time.perf_counter()
-    print(f"Write to disk: {int((end - start)*1000%1000)}ms")
+    for i in range(iterations):
+        filename = generate_file(file_size, file_prefix, file_ext)
 
-    # start = time.perf_counter()
-    # gcs_write_with_gsutil(filename)
-    # end = time.perf_counter()
-    # print(f"Write disk to GCS (gsutil): {int((end - start)*1000%1000)}ms")
+        start = time.perf_counter()
+        write_file_to_gcs(filename)
+        end = time.perf_counter()
+        time_file = int((end - start)*1000%1000)
 
-    start = time.perf_counter()
-    gcs_write_with_sdk(filename)
-    end = time.perf_counter()
-    print(f"Write disk to GCS (SDK): {int((end - start)*1000%1000)}ms")
+        start = time.perf_counter()
+        write_direct_to_gcs(filename, file_size)
+        end = time.perf_counter()
+        time_direct = int((end - start)*1000%1000)
 
-    # start = time.perf_counter()
-    # gcs_write_direct()
-    # end = time.perf_counter()
-    # print(f"Write Direct to GCS (SDK): {int((end - start)*1000%1000)}ms")
+        writer.writerow([i, filename, file_size, time_file, time_direct])
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Generate random files")
     parser.add_argument("--file-size", type=int, help="Size of each file (in bytes)", default=10**6)
     parser.add_argument("--file-prefix", type=str, help="Filename prefix to use", default="file_")
     parser.add_argument("--file-ext", type=str, help="File extension to use", default="txt")
+    parser.add_argument("--iterations", type=int, help="Number of times to run the test", default=5)
 
     main(parser.parse_args())
