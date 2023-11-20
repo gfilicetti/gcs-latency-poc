@@ -14,7 +14,7 @@ printf "Using region: ${REGION} \n"
 # create the new cloud run job
 gcloud run jobs create ${JOB} \
     --image ${IMAGE}:latest \
-    --command "python -m latency.write_to_gcs" \
-    --args ${ARGS} \
+    --command "python" \ 
+    --args="-m latency.write_to_gcs ${ARGS}" \
     --parallelism 1 \
     --region ${REGION}
