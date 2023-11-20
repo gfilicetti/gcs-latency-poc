@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import random
@@ -84,11 +85,12 @@ def main(args):
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Generate random files")
-    parser.add_argument("--iterations", type=int, help="Number of times to run the test", default=10)
-    parser.add_argument("--file-size", type=int, help="Size of each file (in bytes)", default=5*(10**6))
-    parser.add_argument("--file-prefix", type=str, help="Filename prefix to use", default="file_")
-    parser.add_argument("--file-ext", type=str, help="File extension to use", default="ts")
-    parser.add_argument("--bucket-name", type=str, help="Name of GCS Bucket", default="gcs-latency-test")
-    parser.add_argument("--folder-name", type=str, help="Folder in bucket to use", default="5MB")
+    parser.add_argument("--iterations", type=int, help="Number of times to run the test", default=os.getenv("LATENCY_TEST_ITERATIONS", 10))
+    parser.add_argument("--file-size", type=int, help="Size of each file (in bytes)", default=os.getenv("LATENCY_TEST_FILE_SIZE", 5*(10**6)))
+    parser.add_argument("--file-prefix", type=str, help="Filename prefix to use", default=os.getenv("LATENCY_TEST_FILE_PREFIX", "file_"))
+    parser.add_argument("--file-ext", type=str, help="File extension to use", default=os.getenv("LATENCY_TEST_FILE_EXTENSION", "ts"))
+    parser.add_argument("--bucket-name", type=str, help="Name of GCS Bucket", default=os.getenv("LATENCY_TEST_BUCKET_NAME", "gcs-latency-test"))
+    parser.add_argument("--folder-name", type=str, help="Folder in bucket to use", default=os.getenv("LATENCY_TEST_FOLDER_NAME", "5MB"))
+
 
     main(parser.parse_args())

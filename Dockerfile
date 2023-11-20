@@ -15,5 +15,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # set our context
 WORKDIR /src
 
+# set our environment
+ENV LATENCY_TEST_ITERATIONS=10
+ENV LATENCY_TEST_FILE_SIZE=5000000
+ENV LATENCY_TEST_FILE_PREFIX="file_"
+ENV LATENCY_TEST_FILE_EXTENSION="ts"
+ENV LATENCY_TEST_BUCKET_NAME="gcs-latency-test"
+ENV LATENCY_TEST_FOLDER_NAME="5MB"
+
 # Run the script as a module
 CMD ["python", "-m", "latency.write_to_gcs"]
