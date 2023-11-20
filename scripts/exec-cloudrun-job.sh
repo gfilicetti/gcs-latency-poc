@@ -4,7 +4,7 @@
 JOB=${1:-"gcs-latency-tester"}
 ARGS=${2:-"arg1,arg2,arg3"}
 ENV_VARS=${3:-"VAR1=VAL1,VAR2=VAL2"}
-WAIT=${4:-";"}
+REGION=${4:-"us-central1"}
 
 printf "Executing cloud run job: ${JOB} \n"
 
@@ -12,4 +12,4 @@ printf "Executing cloud run job: ${JOB} \n"
 gcloud run jobs execute ${JOB} \
      --args ${ARGS} \
      --update-env-vars ${ENV_VARS} \
-     ${WAIT}
+     --region ${REGION}
