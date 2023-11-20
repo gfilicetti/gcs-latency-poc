@@ -17,4 +17,5 @@ gcloud run jobs create ${JOB} \
     --region ${REGION} \
     --parallelism=1 \
     --memory=2Gi \
+    --task-timeout=3600 \
     --set-env-vars=${ENV} 
