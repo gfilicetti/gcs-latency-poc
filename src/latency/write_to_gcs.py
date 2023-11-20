@@ -1,16 +1,12 @@
 import sys
-import random
 import time
-import subprocess
+import random
 import csv
+
 from uuid import uuid4
 from argparse import ArgumentParser
-from google.cloud import storage
-# from tqdm import tqdm
 
-# Constants
-BUCKET = "gcs-latency-1"
-DIR = "test1"
+from google.cloud import storage
 
 def generate_random_data(size_in_bytes):
     return ''.join(chr(random.randint(65, 90)) for _ in range(size_in_bytes))
@@ -24,10 +20,6 @@ def generate_file(data, file_prefix, file_ext):
         f.write(data)
 
     return filename
-
-def gsutil_file_to_gcs(filename):
-    cmd = ["gsutil", "--quiet", "cp", filename, f"gs://{BUCKET}/{DIR}"]
-    subprocess.check_call(cmd)
 
 def write_file_to_gcs(bucket, folder, filename):
     blob = bucket.blob(f"{folder}/sdk-{filename}")
