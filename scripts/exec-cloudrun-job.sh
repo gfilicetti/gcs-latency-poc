@@ -1,6 +1,6 @@
 #!/bin/bash
 # This script will execute the passed in cloud run job
-# exec-cloudrun-job.sh {cloudrun_job_name} {container_args} {env_vars} {--wait}
+# exec-cloudrun-job.sh {cloudrun_job_name} {container_args} {region}
 JOB=${1:-"gcs-latency-tester"}
 ARGS=${2:-""}
 REGION=${3:-"us-central1"}
