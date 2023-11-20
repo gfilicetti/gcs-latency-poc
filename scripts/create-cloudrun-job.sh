@@ -3,7 +3,7 @@
 # create-cloudrun-job.sh {cloudrun_job_name} {image} {arguments} {region} 
 JOB=${1:-"gcs-latency-tester"}
 IMAGE=${2:-"us-central1-docker.pkg.dev/gcs-latency-poc/registry-docker/gcs-latency-tester"}
-ARGS=${3:-"10 5000000 file_ ts gcs_latency_test 5MB"}
+ARGS=${3:-"10,5000000,file_,ts,gcs_latency_test,5MB"}
 REGION=${4:-"us-central1"}
 
 printf "Creating cloud run job: ${JOB} \n"
