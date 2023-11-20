@@ -2,11 +2,13 @@ import sys
 import time
 import random
 import csv
+import datetime
 
 from uuid import uuid4
 from argparse import ArgumentParser
 
 from google.cloud import storage
+from tqdm import tqdm
 
 def generate_random_data(size_in_bytes):
     return ''.join(chr(random.randint(65, 90)) for _ in range(size_in_bytes))
@@ -31,6 +33,22 @@ def write_direct_to_gcs(bucket, folder, filename, data):
     with blob.open('w') as f:
         f.write(data)
 
+def output_results(test_results, bucket, folder, file_prefix):
+    headers = ["iteration", "filename", "size_mb", "time_file_to_gcs", "time_direct_to_gcs"]
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H_%M")
+
+    # Write results into blob storage
+    blob = bucket.blob(f"{folder}/results-{file_prefix}-{timestamp}.csv")
+
+    blob_file = csv.writer(blob.open('w'))
+    blob_file.writerow(headers)
+    blob_file.writerows(test_results)
+
+    # Write results to stdout
+    stdout = csv.writer(sys.stdout)
+    stdout.writerow(headers)
+    stdout.writerows(test_results)
+
 def main(args):
 
     iterations = args.iterations
@@ -43,10 +61,9 @@ def main(args):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    writer = csv.writer(sys.stdout)
-    writer.writerow(["iteration", "filename", "size_mb", "time_file_to_gcs", "time_direct_to_gcs"])
+    test_results = []
 
-    for i in range(iterations):
+    for i in tqdm(range(iterations), desc="Testing GCS Latency", unit="Test", colour="green"):
         data = generate_random_data(file_size)
         filename = generate_file(data, file_prefix, file_ext)
 
@@ -60,8 +77,10 @@ def main(args):
         end = time.perf_counter()
         time_direct = int((end - start)*1000%1000)
 
-        writer.writerow([i, filename, int(file_size/10**6), time_file, time_direct])
-        sys.stdout.flush()
+        test_results.append([i, filename, int(file_size/10**6), time_file, time_direct])
+
+    output_results(test_results, bucket, folder_name, file_prefix)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Generate random files")
