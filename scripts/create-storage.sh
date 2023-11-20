@@ -8,7 +8,6 @@ PROJECT=${3:-$(gcloud config get project)}
 
 printf "Creating bucking: ${BUCKET} \n"
 printf "Using region(s): ${REGION} \n"
-printf "Using project: ${PROJECT} \n"
 
 # create the new GCS bucket
 gsutil mb -l $REGION "gs://${BUCKET}"
