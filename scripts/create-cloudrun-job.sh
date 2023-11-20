@@ -16,4 +16,5 @@ gcloud run jobs create ${JOB} \
     --image ${IMAGE}:latest \
     --region ${REGION} \
     --parallelism=1 \
+    --memory=2Gi \
     --set-env-vars=${ENV} 
