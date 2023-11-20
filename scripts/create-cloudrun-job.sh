@@ -14,6 +14,6 @@ printf "In region: ${REGION} \n"
 # create the new cloud run job
 gcloud run jobs create ${JOB} \
     --image ${IMAGE}:latest \
-    --set-env-vars=${ENV} \ 
+    --region ${REGION} \
     --parallelism=1 \
-    --region ${REGION}
+    --set-env-vars=${ENV} 
