@@ -15,7 +15,7 @@ def read(filename: str) -> bytes:
 def blob_write(bucket_name: str, data: bytes, n: int) -> list[float]:
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
-    times = [0] * n
+    times = [0.0] * n
     for i in range(n):
         name = uuid4().hex
         blob = bucket.blob(name)
@@ -29,7 +29,7 @@ def blob_write(bucket_name: str, data: bytes, n: int) -> list[float]:
 def upload_from_string(bucket_name: str, data: bytes, n: int) -> list[float]:
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
-    times = [0] * n
+    times = [0.0] * n
     for i in range(n):
         name = uuid4().hex
         blob = bucket.blob(name)
@@ -42,7 +42,7 @@ def upload_from_string(bucket_name: str, data: bytes, n: int) -> list[float]:
 def upload_from_filename(bucket_name: str, src_file_name: str, n: int) -> list[float]:
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
-    times = [0] * n
+    times = [0.0] * n
     for i in range(n):
         name = uuid4().hex
         blob = bucket.blob(name)
@@ -56,7 +56,7 @@ def upload_from_file(bucket_name: str, data: bytes, n: int) -> list[float]:
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
     file_obj = io.BytesIO(data)
-    times = [0] * n
+    times = [0.0] * n
     for i in range(n):
         name = uuid4().hex
         blob = bucket.blob(name)
