@@ -21,8 +21,9 @@ def generate_random_data(size_in_bytes):
 
 def generate_file(data, file_prefix, file_ext):
     # we only need the 6 least significant digits from the hex of our uuid
-    uid = f"{uuid4().hex[-6:]}"
-    filename = f"{uid}-{file_prefix}.{file_ext}"
+    # uid = f"{uuid4().hex[-6:]}"
+    # filename = f"{uid}-{file_prefix}.{file_ext}"
+    filename = f"{file_prefix}.{file_ext}"
 
     with open(filename, "wb") as f:
         f.write(data)
@@ -30,7 +31,9 @@ def generate_file(data, file_prefix, file_ext):
     return filename
 
 def write_file_to_gcs(bucket, folder, filename, data):
-    blob = bucket.blob(f"{folder}/by-file-{filename}")
+    # we only need the 6 least significant digits from the hex of our uuid
+    uid = f"{uuid4().hex[-6:]}"
+    blob = bucket.blob(f"{folder}/by-file-{uid}-{filename}")
     file_obj = io.BytesIO(data)
     file_obj.seek(0)
     start = time.perf_counter()
@@ -38,19 +41,25 @@ def write_file_to_gcs(bucket, folder, filename, data):
     return time.perf_counter() - start
 
 def write_filename_to_gcs(bucket, folder, filename):
-    blob = bucket.blob(f"{folder}/by-filename-{filename}")
+    # we only need the 6 least significant digits from the hex of our uuid
+    uid = f"{uuid4().hex[-6:]}"
+    blob = bucket.blob(f"{folder}/by-filename-{uid}-{filename}")
     start = time.perf_counter()
     blob.upload_from_filename(filename)
     return time.perf_counter() - start
 
 def write_string_to_gcs(bucket, folder, filename, data):
-    blob = bucket.blob(f"{folder}/by-string-{filename}")
+    # we only need the 6 least significant digits from the hex of our uuid
+    uid = f"{uuid4().hex[-6:]}"
+    blob = bucket.blob(f"{folder}/by-string-{uid}-{filename}")
     start = time.perf_counter()
     blob.upload_from_string(data)
     return time.perf_counter() - start
 
 def write_direct_to_gcs(bucket, folder, filename, data):
-    blob = bucket.blob(f"{folder}/by-stream-{filename}")
+    # we only need the 6 least significant digits from the hex of our uuid
+    uid = f"{uuid4().hex[-6:]}"
+    blob = bucket.blob(f"{folder}/by-stream-{uid}-{filename}")
 
     start = time.perf_counter()
 
@@ -99,9 +108,10 @@ def main(args):
 
     test_results = [0] * iterations
 
+    data = generate_random_data(file_size)
+    filename = generate_file(data, file_prefix, file_ext)
+
     for i in tqdm(range(iterations), desc="Testing GCS Latency", unit="Test", colour="green"):
-        data = generate_random_data(file_size)
-        filename = generate_file(data, file_prefix, file_ext)
 
         time_file = write_file_to_gcs(bucket, folder_name, filename, data)
         time_filename = write_filename_to_gcs(bucket, folder_name, filename)
