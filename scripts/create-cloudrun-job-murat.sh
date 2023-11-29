@@ -2,7 +2,7 @@
 # This script will deploy a new cloud run job in the region passed in 
 # create-cloudrun-job.sh {cloudrun_job_name} {env_vars} {image} {region} 
 JOB=${1:-"gcs-latency-tester-murat"}
-ENV=${2:-"LATENCY_TEST_ITERATIONS=10,LATENCY_TEST_BUCKET_NAME=gcs-latency-test-murat,LATENCY_TEST_SRC_FILE=5MB.random"}
+ENV=${2:-"LATENCY_TEST_ITERATIONS=10,LATENCY_TEST_BUCKET_NAME=gcs-latency-murat,LATENCY_TEST_SRC_FILE=5MB.random"}
 IMAGE=${3:-"us-central1-docker.pkg.dev/gcs-latency-poc/registry-docker/gcs-latency-tester-murat"}
 REGION=${4:-"us-central1"}
 

@@ -17,7 +17,7 @@ WORKDIR /src
 
 # set our environment
 ENV LATENCY_TEST_ITERATIONS=10
-ENV LATENCY_TEST_BUCKET_NAME="gcs-latency-test"
+ENV LATENCY_TEST_BUCKET_NAME="gcs-latency-murat"
 ENV LATENCY_TEST_SRC_FILE="5MB.random"
 
 # Run the script as a module
