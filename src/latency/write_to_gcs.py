@@ -97,12 +97,12 @@ def main(args):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    data = generate_random_data(file_size)
-    filename = generate_file(data, file_prefix, file_ext)
-
     test_results = [0] * iterations
 
     for i in tqdm(range(iterations), desc="Testing GCS Latency", unit="Test", colour="green"):
+        data = generate_random_data(file_size)
+        filename = generate_file(data, file_prefix, file_ext)
+
         time_file = write_file_to_gcs(bucket, folder_name, filename, data)
         time_filename = write_filename_to_gcs(bucket, folder_name, filename)
         time_string = write_string_to_gcs(bucket, folder_name, filename, data)
