@@ -1,5 +1,6 @@
 import argparse
 import io
+import os
 import time
 from uuid import uuid4
 
@@ -89,10 +90,11 @@ def summary(output_file_name: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bucket-name", default="meken-playground-blobs")
-    parser.add_argument("--src-file-name", default="random.bytes")
-    parser.add_argument("--output", default="results.csv")
-    parser.add_argument("iterations", type=int, nargs="?", default=1)
+    parser.add_argument("--bucket-name", default=os.getenv("LATENCY_TEST_BUCKET_NAME", "meken-playground-blobs"))
+    parser.add_argument("--src-file-name", default=os.getenv("LATENCY_TEST_SRC_FILE", "random.bytes"))
+    parser.add_argument("--output", default=os.getenv("LATENCY_TEST_OUTPUT_FILE", "results.csv"))
+    parser.add_argument("--iterations", type=int, nargs="?", default=os.getenv("LATENCY_TEST_ITERATIONS", 10))
+
     args = parser.parse_args()
 
     process(args)
