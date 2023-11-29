@@ -15,7 +15,7 @@ printf "In region: ${REGION} \n"
 gcloud run jobs create ${JOB} \
     --image ${IMAGE}:latest \
     --region ${REGION} \
-    --parallelism=1 \
-    --memory=2Gi \
-    --task-timeout=3600 \
+    --cpu=8 \
+    --memory=16Gi \
+    --task-timeout=86400 \
     --set-env-vars=${ENV} 
