@@ -77,7 +77,14 @@ def output_results(test_results, bucket, folder, file_prefix):
 
     # Use panda to get stats 
     df = pd.DataFrame(test_results, columns=["time_file", "time_filename", "time_string", "time_direct"])
-    print(df.describe())
+    stats = str(df.describe())
+
+    # Output stats to GCS and to stdout
+    blob = bucket.blob(f"{folder}/results-{file_prefix}-{timestamp}-stats.txt")
+    with blob.open('w') as f:
+        f.write(stats)
+
+    print(stats)
 
 def main(args):
     iterations = args.iterations
@@ -116,3 +123,4 @@ if __name__ == "__main__":
     parser.add_argument("--folder-name", type=str, help="Folder in bucket to use", default=os.getenv("LATENCY_TEST_FOLDER_NAME", "5MB"))
 
     main(parser.parse_args())
+
