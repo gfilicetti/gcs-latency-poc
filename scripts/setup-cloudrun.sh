@@ -1,9 +1,10 @@
 #!/bin/bash
-# This script will deploy a new cloud run in the region passed in 
-# create-cloudrun.sh {cloudrun_service_name} {region} {image} {project}
+# This script will give the Compute Service Account GCS Storage Admin permissions so the Cloud Run containers can access storage buckets.
+# setup-cloudrun.sh {cloudrun_service_name} {region} {project}
 SERVICE=${1:-"gcs-latency-tester"}
 REGION=${2:-"us-central1"}
 PROJECT=${3:-$(gcloud config get project)}
+
 PROJECT_NUM=$(gcloud projects describe ${PROJECT} --format="value(projectNumber)")
 
 printf "Giving Storage Admin permissions to the Compute SA"
